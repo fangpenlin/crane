@@ -1,0 +1,18 @@
+FROM phusion/baseimage:0.9.10
+MAINTAINER Victor Lin <bornstub@gmail.com>
+
+# update apt
+RUN apt-get -qq update
+
+RUN apt-get install -y python python-dev python-pip python-virtualenv
+RUN apt-get install -y build-essential gcc
+RUN apt-get install -y libxml2-dev libxslt1-dev
+RUN apt-get install -y libffi-dev  # required by bcrypt
+RUN apt-get install -y libpcre3-dev  # required by many things, like uWsgi
+RUN apt-get install -y git
+
+RUN easy_install -U setuptools
+RUN pip install ipython ipdb
+
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]
