@@ -95,6 +95,16 @@ class BuilderBase(object):
         # TODO:
         pass
 
+    def pre_build(self):
+        """Called before build
+
+        """
+
+    def post_build(self):
+        """Called after build
+
+        """
+
     def build(self):
         logger.info(
             'Building image %s @ %s',
@@ -102,9 +112,11 @@ class BuilderBase(object):
             self.image_version,
         )
         logger.debug('Build in folder %s', self.build_dir)
-
+        
         self.copy_files()
         self.render_templates()
+
+        self.pre_build()
         # build the image
         logger.info('Building %s to %s', self.build_dir, self.target_name)
         subprocess.check_call(' '.join([
@@ -113,6 +125,7 @@ class BuilderBase(object):
             '-t="{}"'.format(self.target_name),
             self.build_dir,
         ]), shell=True)
+        self.post_build()
 
     def upload(self):
         pass
