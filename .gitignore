@@ -43,6 +43,7 @@ env
 
 .shared_data
 Dockerfile
+.build
 
 # SQLite database
 *.db

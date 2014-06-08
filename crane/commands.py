@@ -23,6 +23,9 @@ def build(name):
     """Build a Dockerfile project
 
     """
+    # TODO: use a better way to config the logger
+    logging.basicConfig(level=logging.INFO)
+
     logger = logging.getLogger(__name__)
     module = importlib.import_module(name)
     builder = module.Builder()
@@ -37,7 +40,7 @@ def build(name):
             dep_builder.build()
 
     builder.build()
+    logger.info('Finish building %s', builder.image_name)
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
     build()

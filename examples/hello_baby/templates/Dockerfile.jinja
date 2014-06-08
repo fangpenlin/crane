@@ -1,18 +1,11 @@
 FROM phusion/baseimage:0.9.10
 MAINTAINER Victor Lin <bornstub@gmail.com>
 
-# update apt
-RUN apt-get -qq update
+# Set correct environment variables.
+ENV HOME /root
 
-RUN apt-get install -y python python-dev python-pip python-virtualenv
-RUN apt-get install -y build-essential gcc
-RUN apt-get install -y libxml2-dev libxslt1-dev
-RUN apt-get install -y libffi-dev  # required by bcrypt
-RUN apt-get install -y libpcre3-dev  # required by many things, like uWsgi
-RUN apt-get install -y git
-
-RUN easy_install -U setuptools
-RUN pip install ipython ipdb
+ADD hello_baby.sh /tmp/hello_baby_v{{ builder.image_version }}.sh
+RUN chmod +x /tmp/hello_baby_v{{ builder.image_version }}.sh
 
 # Use baseimage-docker's init system.
-CMD ["/sbin/my_init"]
+CMD ["/sbin/my_init", "--", "bash", "-c", "/tmp/hello_baby_v{{ builder.image_version }}.sh"]
