@@ -3,6 +3,7 @@ import os
 import logging
 import subprocess
 import importlib
+import shutil
 
 from jinja2 import Environment
 from jinja2 import FunctionLoader
@@ -84,7 +85,7 @@ class BuilderBase(object):
             target_path = os.path.join(self.build_dir, filename)
             target_path = target_path[:-len('.jinja')]
             template = self.jinja_env.get_template(template_path)
-            logger.info('Rendering template %s', template_path)
+            logger.info('Rendering template %s', filename)
             with open(target_path, 'wt') as rendered_file:
                 rendered_file.write(template.render(builder=self))
 
@@ -92,8 +93,14 @@ class BuilderBase(object):
         """Copy files into build dir
 
         """
-        # TODO:
-        pass
+        files_dir = os.path.join(self.folder, 'files')
+        if not os.path.exists(files_dir):
+            return
+        for filename in os.listdir(files_dir):
+            src_path = os.path.join(files_dir, filename)
+            dest_path = os.path.join(self.build_dir, filename)
+            logger.info('Copying file %s', filename)
+            shutil.copyfile(src_path, dest_path)
 
     def pre_build(self):
         """Called before build
