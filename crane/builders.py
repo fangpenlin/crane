@@ -120,10 +120,11 @@ class BuilderBase(object):
         )
         logger.debug('Build in folder %s', self.build_dir)
         
+        self.pre_build()
+        
         self.copy_files()
         self.render_templates()
 
-        self.pre_build()
         # build the image
         logger.info('Building %s to %s', self.build_dir, self.target_name)
         subprocess.check_call(' '.join([
