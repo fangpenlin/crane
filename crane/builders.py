@@ -137,11 +137,21 @@ class BuilderBase(object):
         # add other tags to this image
         for tag in self.image_tags[1:]:
             logger.info('Add tag %s to %s', tag, self.target_name)
+            tag_target_name = self.image_name
+            if self.owner_name is not None:
+                tag_target_name = '{}/{}'.format(
+                    self.owner_name,
+                    tag_target_name,
+                )
+            tag_target_name = '{}:{}'.format(
+                tag_target_name,
+                tag,
+            )
             subprocess.check_call(' '.join([
                 'docker',
                 'tag',
                 self.target_name,
-                tag,
+                tag_target_name,
             ]), shell=True)
         self.post_build()
 
