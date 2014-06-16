@@ -20,8 +20,8 @@ class BuilderBase(object):
     image_name = None
     #: version of image
     image_version = None
-    #: the tag of image
-    image_tag = None
+    #: tags of image
+    image_tags = None
     #: target tag name
     target_name = None
     #: directory for building
@@ -52,8 +52,11 @@ class BuilderBase(object):
         """Initialize variables
 
         """
-        if self.image_tag is None:
-            self.image_tag = 'v{}'.format(self.image_version)
+        if self.image_tags is None:
+            self.image_tags = [
+                'v{}'.format(self.image_version),
+                'latest',
+            ]
         if self.target_name is None:
             self.target_name = self.image_name
             if self.owner_name is not None:
@@ -61,10 +64,10 @@ class BuilderBase(object):
                     self.owner_name,
                     self.target_name,
                 )
-            if self.image_tag is not None:
+            if self.image_tags:
                 self.target_name = '{}:{}'.format(
                     self.target_name,
-                    self.image_tag,
+                    self.image_tags[0],
                 )
         if self.build_dir is None:
             self.build_dir = os.path.join(self.folder, '.build')
@@ -121,10 +124,8 @@ class BuilderBase(object):
         logger.debug('Build in folder %s', self.build_dir)
         
         self.pre_build()
-        
         self.copy_files()
         self.render_templates()
-
         # build the image
         logger.info('Building %s to %s', self.build_dir, self.target_name)
         subprocess.check_call(' '.join([
@@ -133,6 +134,15 @@ class BuilderBase(object):
             '-t="{}"'.format(self.target_name),
             self.build_dir,
         ]), shell=True)
+        # add other tags to this image
+        for tag in self.image_tags[1:]:
+            logger.info('Add tag %s to %s', tag, self.target_name)
+            subprocess.check_call(' '.join([
+                'docker',
+                'tag',
+                self.target_name,
+                tag,
+            ]), shell=True)
         self.post_build()
 
     def upload(self):
