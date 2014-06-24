@@ -1,6 +1,8 @@
 Crane
 =====
 
+[![Build Status](https://travis-ci.org/victorlin/crane.svg?branch=master)](https://travis-ci.org/victorlin/crane)
+
 Crane is a simple tool for building Dockerfiles. It can render templates for you. 
 
 Demo
