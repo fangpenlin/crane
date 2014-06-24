@@ -17,7 +17,6 @@ def load_builder_module(name):
 @click.argument(
     'name',
     type=str,
-    #help='Project python module name path to build, e.g. examples.hello_baby',
 )
 def build(name):
     """Build a Dockerfile project
