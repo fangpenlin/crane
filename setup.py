@@ -4,7 +4,7 @@ use_setuptools()
 from setuptools import setup, find_packages
 
 setup(
-    name='crane',
+    name='docker-crane',
     version='0.1.0',
     description="A simple tool for building Dockerfiles",
     author='Victor Lin',
